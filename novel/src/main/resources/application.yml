@@ -1,0 +1,12 @@
+server :
+  port : 8080
+
+spring :
+  profiles :
+    include :
+      - oauth
+      - database
+
+logging :
+  level  :
+    root : debug

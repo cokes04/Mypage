@@ -1,0 +1,16 @@
+spring:
+  security:
+    oauth2:
+      client:
+        registration:
+          google:
+            clientId: 877894811974-djvpsg0rsatb2t7gn6ffil5bgdjs1akm.apps.googleusercontent.com
+            clientSecret: _0i-WegUgMYN73GyrH8NoJaT
+            redirectUri: "{baseUrl}/oauth2/callback/{registrationId}"
+            scope:
+              - email
+              - profile
+app:
+  oauth2:
+    authorizedRedirectUris:
+      - http://localhost:3000/oauth2/redirect
