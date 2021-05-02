@@ -9,26 +9,24 @@ import com.kog.mypage.novel.entity.ticket.UseTicketRecord;
 import lombok.Builder;
 import lombok.Getter;
 
-import java.util.Optional;
-
 @Getter
-public class UseTicketDto extends TicketDto {
+public class UseTicketDto extends ChangeTicketDto {
 
     private Episode episode;
 
     @Builder
     public UseTicketDto(User user, Novel novel, TicketType ticketType, Episode episode) {
-        super(user, novel, ticketType, -1);
+        super(user, novel, ticketType);
         this.episode =  episode;
     }
 
     @Override
     public TicketRecord createTicketRecord() {
         return UseTicketRecord.builder()
-                .user(this.getUser())
+                .user(getUser())
+                .novel(getNovel())
                 .episode(this.episode)
-                .count(this.getCount())
-                .ticketType(this.getTicketType())
+                .ticketType(getTicketType())
                 .build();
     }
 }

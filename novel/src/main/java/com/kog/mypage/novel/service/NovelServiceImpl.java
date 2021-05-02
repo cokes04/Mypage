@@ -53,6 +53,11 @@ public class NovelServiceImpl implements NovelService {
     }
 
     @Override
+    public Page<Novel> searchNovel(String word, Pageable pageable) {
+        return novelRepository.serch(word, pageable);
+    }
+
+    @Override
     public Novel addNovel(Novel novel) {
         if (!novelRepository.existsByTitle(novel.getTitle())){
             return novelRepository.save(novel);
@@ -76,5 +81,6 @@ public class NovelServiceImpl implements NovelService {
     public void deleteNovel(Novel novel) {
         novelRepository.delete(novel);
     }
+
 
 }

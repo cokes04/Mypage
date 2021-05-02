@@ -17,7 +17,7 @@ import java.util.Optional;
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
-public abstract class TicketDto {
+public abstract class ChangeTicketDto {
 
     private User user;
 
@@ -25,19 +25,5 @@ public abstract class TicketDto {
 
     private TicketType ticketType;
 
-    private int count;
-
-    public Ticket createTicket(){
-         Ticket ticket = Ticket.builder()
-                 .user(this.user)
-                 .novel(this.novel)
-                 .rentalCount(0)
-                 .possessionCount(0)
-                 .build();
-         ticket.changeCount(this.count, this.ticketType);
-         return ticket;
-    }
-
     public abstract TicketRecord createTicketRecord();
-
 }

@@ -14,3 +14,7 @@ app:
   oauth2:
     authorizedRedirectUris:
       - http://localhost:3000/oauth2/redirect
+  auth :
+    tokenValidSecond : 21600000  # 6 * 60 * 60 * 1000 millsecond
+    secretKey : ewqkljrejk213lrjk23821woie12jssss
+    tokenHeaderName : authentication

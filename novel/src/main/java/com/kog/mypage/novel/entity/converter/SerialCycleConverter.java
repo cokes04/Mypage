@@ -1,4 +1,6 @@
-package com.kog.mypage.novel.entity.enumerate;
+package com.kog.mypage.novel.entity.converter;
+
+import com.kog.mypage.novel.entity.enumerate.SerialCycle;
 
 import javax.persistence.AttributeConverter;
 import java.util.ArrayList;

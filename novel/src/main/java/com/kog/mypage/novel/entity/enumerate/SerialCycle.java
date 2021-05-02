@@ -6,25 +6,25 @@ import lombok.RequiredArgsConstructor;
 @Getter
 @RequiredArgsConstructor
 public enum SerialCycle {
-    MONDAY("MO"),TUESDAY("TU"),WEDNESDAY("WE"),THURSDAY("TH"),FRIDAY("FR"),SATURDAY("SA"),SUNDAY("SU");
+    MONDAY("월"),TUESDAY("화"),WEDNESDAY("수"),THURSDAY("목"),FRIDAY("금"),SATURDAY("토"),SUNDAY("일");
 
-    private final String value;
+    public final String value;
 
     public static SerialCycle toEnum(String value) {
         switch (value) {
-            case "MO":
+            case "월":
                 return SerialCycle.MONDAY;
-            case "TU":
+            case "화":
                 return SerialCycle.TUESDAY;
-            case "WE":
+            case "수":
                 return SerialCycle.WEDNESDAY;
-            case "TH":
+            case "목":
                 return SerialCycle.THURSDAY;
-            case "FR":
+            case "금":
                 return SerialCycle.FRIDAY;
-            case "SA":
+            case "토":
                 return SerialCycle.SATURDAY;
-            case "SU":
+            case "일":
                 return SerialCycle.SUNDAY;
             default :
                 return null;

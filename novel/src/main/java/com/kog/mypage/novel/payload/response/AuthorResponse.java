@@ -9,7 +9,7 @@ public class AuthorResponse {
     private String name;
 
     @Builder
-    public AuthorResponse(String name) {
+    private AuthorResponse(String name) {
         this.name = name;
     }
 

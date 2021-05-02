@@ -12,7 +12,7 @@ public class LogAspect {
 
     @Around("within(com.kog.mypage.novel..*) or within(com.kog.mypage.novel.securituy..*)")
     public Object a(ProceedingJoinPoint joinPoint) throws Throwable{
-        System.out.println("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@");
+        System.out.println("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@");
         System.out.println(joinPoint.getTarget());
         return joinPoint.proceed();
     }

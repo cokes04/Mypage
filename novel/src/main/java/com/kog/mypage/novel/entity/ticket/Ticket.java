@@ -5,13 +5,17 @@ import com.kog.mypage.novel.entity.Novel;
 import com.kog.mypage.novel.entity.User;
 import com.kog.mypage.novel.entity.enumerate.TicketType;
 import lombok.*;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import javax.persistence.*;
+import java.time.LocalDateTime;
 
 @NoArgsConstructor
 @Getter
 @Entity
 @ToString
+@EntityListeners(AuditingEntityListener.class)
 public class Ticket {
 
     @Id @GeneratedValue(strategy = GenerationType.AUTO)
@@ -29,14 +33,19 @@ public class Ticket {
 
     private int possessionCount;
 
+    @CreatedDate
+    private LocalDateTime createDate;
+
     @Builder
-    public Ticket(Long id, User user, Novel novel, int rentalCount, int possessionCount) {
+    public Ticket(Long id, User user, Novel novel, int rentalCount, int possessionCount, LocalDateTime createDate) {
         this.id = id;
         this.user = user;
         this.novel = novel;
         this.rentalCount = rentalCount;
         this.possessionCount = possessionCount;
+        this.createDate = createDate;
     }
+
 
     public int getAllCount(){
         return rentalCount + possessionCount;

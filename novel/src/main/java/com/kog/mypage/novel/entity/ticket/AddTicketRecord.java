@@ -14,9 +14,17 @@ import java.time.LocalDateTime;
 @DiscriminatorValue("ADD")
 public class AddTicketRecord extends TicketRecord {
 
-    @Builder
-    public AddTicketRecord(Long id, User user, Novel novel, TicketType ticketType, int count, LocalDateTime createdDate) {
-        super(id, user, novel, ticketType, count, createdDate);
-    }
+    private int count;
 
+    private int paidCount;
+
+    private int price;
+
+    @Builder
+    public AddTicketRecord(Long id, User user, Novel novel, TicketType ticketType, LocalDateTime createdDate, int count, int paidCount, int price) {
+        super(id, user, novel, ticketType, createdDate);
+        this.count = count;
+        this.paidCount = paidCount;
+        this.price = price;
+    }
 }

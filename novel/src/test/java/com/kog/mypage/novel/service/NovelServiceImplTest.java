@@ -2,6 +2,7 @@ package com.kog.mypage.novel.service;
 
 import com.kog.mypage.novel.entity.Author;
 import com.kog.mypage.novel.entity.Novel;
+import com.kog.mypage.novel.entity.Publisher;
 import com.kog.mypage.novel.entity.enumerate.AgeGrade;
 import com.kog.mypage.novel.entity.enumerate.Genre;
 import com.kog.mypage.novel.entity.enumerate.SerialCycle;
@@ -45,44 +46,58 @@ class NovelServiceImplTest {
         authors = new ArrayList<Author>();
         novels = new ArrayList<Novel>();
 
-        authors.add( new Author((long) 1,"kim", Arrays.asList()) );
-        authors.add( new Author((long) 2, "lee", Arrays.asList()) );
+        authors.add( Author.builder().id((long) 1).name("kim").build() );
+        authors.add( Author.builder().id((long) 2).name("lee").build() );
 
         novels.add(
                 new Novel((long) 1,
                         authors.get(0),
+                        new Publisher(),
                         "ABC",
+                        "haha",
                         100,
+                        0,
                         AgeGrade.ALL,
                         Genre.FANTASY,
                         Arrays.asList(SerialCycle.SUNDAY, SerialCycle.FRIDAY),
                         null,
-                        null
-                )
-        );
-         novels.add(
-                 new Novel((long)2,
-                         authors.get(0),"짱구",
-                         1000,
-                         AgeGrade.FIFTEEN,
-                         Genre.ROMANCE,
-                         Arrays.asList(SerialCycle.SUNDAY, SerialCycle.WEDNESDAY, SerialCycle.SATURDAY),
-                         null,
-                         null
-                 )
-         );
-        novels.add(
-                new Novel((long)3,
-                        authors.get(1),"Super Human",
-                        10000,
-                        AgeGrade.ALL,
-                        Genre.MARTIAL_ARTS,
-                        Arrays.asList(SerialCycle.MONDAY, SerialCycle.FRIDAY, SerialCycle.SATURDAY),
                         null,
                         null
                 )
         );
-        
+        novels.add(
+                new Novel((long)2,
+                        authors.get(0),
+                        new Publisher(),
+                        "짱구",
+                        "짜아아아앙구",
+                        1000,
+                        0,
+                        AgeGrade.FIFTEEN,
+                        Genre.ROMANCE,
+                        Arrays.asList(SerialCycle.SUNDAY, SerialCycle.WEDNESDAY, SerialCycle.SATURDAY),
+                        null,
+                        null,
+                        null
+                )
+        );
+        novels.add(
+                new Novel((long)3,
+                        authors.get(1),
+                        new Publisher(),
+                        "Super Human",
+                        "a",
+                        10000,
+                        0,
+                        AgeGrade.ALL,
+                        Genre.MARTIAL_ARTS,
+                        Arrays.asList(SerialCycle.MONDAY, SerialCycle.FRIDAY, SerialCycle.SATURDAY),
+                        null,
+                        null,
+                        null
+                )
+        );
+
     }
 
     @Test

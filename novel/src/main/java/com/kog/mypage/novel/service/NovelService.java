@@ -22,6 +22,9 @@ public interface NovelService {
     Page<Novel> getAllNovel(Pageable pageable);
 
     List<Novel> getAllNovel();
+
+    Page<Novel> searchNovel(String word, Pageable pageable);
+
     Novel addNovel(Novel novel);
 
     Novel updateNovel(Novel novel);

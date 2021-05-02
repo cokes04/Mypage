@@ -1,5 +1,6 @@
 package com.kog.mypage.novel.entity.enumerate;
 
+import com.kog.mypage.novel.entity.converter.SerialCycleConverter;
 import org.junit.jupiter.api.Test;
 
 import java.util.*;

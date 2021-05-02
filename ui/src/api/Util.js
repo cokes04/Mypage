@@ -28,13 +28,6 @@ export function login(loginRequest) {
     });
 }
 
-export function logout(logoutRequest){
-    return request({
-        url: API_BASE_URL + "/auth/logout",
-        method: 'DELET',
-        body: JSON.stringify(logoutRequest)
-    });
-}
 export function signup(signupRequest) {
     return request({
         url: API_BASE_URL + "/auth/signup",
