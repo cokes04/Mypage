@@ -1,0 +1,3 @@
+app :
+  ticket :
+    rental_minute :  3 * 24 * 60 #3일

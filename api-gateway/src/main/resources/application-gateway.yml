@@ -1,0 +1,47 @@
+spring:
+  cloud:
+    gateway:
+      globalcors:
+        cors-configurations:
+          '[/**]':
+            allowedOrigins: "**"
+            allowedMethods:
+              - GET
+              - POST
+
+      default-filters:
+        - name : LoggingFilter
+
+      routes:
+        - id: auth-service
+          uri: lb://auth-service
+          predicates:
+            - Path=/api/auth/**
+          filters :
+            - RewritePath=/api/?(?<segment>.*),/$\{segment}
+
+        - id: novel-service
+          uri: lb://novel-service
+          predicates:
+            - Path=/api/novel/**
+          filters:
+            - RewritePath=/api/?(?<segment>.*),/$\{segment}
+            - name : TokenAuthenticationFilter
+              args :
+                role : USER
+
+#        - id: ticket-service
+ #         uri: lb://ticket-service
+  #        predicates:
+   #         - Path=/api/ticket/**
+    #      filters:
+     #       - RewritePath =/api/?(?<segment>.*),/$\{segment}
+     #       - TokenAuthenticationFilter
+
+      #  - id: cash-service
+      #    uri: lb://ticket-service
+      #    predicates:
+      #      - Path=/api/ticket/**
+      #   filters:
+      #      - RewritePath =/api/?(?<segment>.*),/$\{segment}
+      #      - TokenAuthenticationFilter
