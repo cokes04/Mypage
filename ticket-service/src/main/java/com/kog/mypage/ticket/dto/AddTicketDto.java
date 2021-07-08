@@ -1,9 +1,6 @@
 package com.kog.mypage.ticket.dto;
 
-import com.kog.mypage.ticket.entity.enumerate.TicketType;
-import com.kog.mypage.ticket.entity.AddTicketRecord;
-import com.kog.mypage.ticket.entity.Ticket;
-import com.kog.mypage.ticket.entity.TicketRecord;
+import com.kog.mypage.ticket.enumeration.TicketType;
 import lombok.Builder;
 import lombok.Getter;
 
@@ -17,8 +14,8 @@ public class AddTicketDto extends ChangeTicketDto {
     private int price;
 
     @Builder
-    public AddTicketDto(Long novelId, TicketType ticketType, int count, int paidCount, int price) {
-        super(novelId, ticketType);
+    public AddTicketDto(Long userId, Long novelId, TicketType ticketType, int count, int paidCount, int price) {
+        super(userId, novelId, ticketType);
         this.count = count;
         this.paidCount = paidCount;
         this.price = price;

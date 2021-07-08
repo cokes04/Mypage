@@ -1,27 +1,27 @@
 package com.kog.mypage.ticket.payload.request;
 
 import lombok.Getter;
+import lombok.Setter;
+import lombok.ToString;
 
-import javax.validation.constraints.Email;
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.Positive;
+import javax.validation.constraints.*;
 import java.time.LocalDateTime;
 import java.util.List;
 
 @Getter
+@Setter
+@ToString
 public class UserInfo {
 
-    @Positive
-    @NotBlank
-    Long userId;
+    @Max(Long.MAX_VALUE)
+    @Min(1)
+    private Long userId;
 
     @Email
     @NotBlank
-    String email;
+    private String email;
 
-    @NotBlank
-    List<String> roles;
+    private List<String> roles;
 
-    @NotBlank
-    LocalDateTime exp;
+    private boolean expired;
 }

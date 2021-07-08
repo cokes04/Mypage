@@ -11,7 +11,7 @@ public interface NovelRepository extends JpaRepository<Novel, Long> {
 
     Page<Novel> findAll(Pageable pageable);
 
-    @Query("SELECT n FROM Novel as n where n.title LIKE %:word% AND n.openDate IS NOT NULL") // 작품명
+    @Query("SELECT n FROM Novel as n where n.title LIKE %:word% AND n.openDate IS NOT NULL") // 작품명만
     Page<Novel> serch(String word, Pageable pageable);
 
     boolean existsByTitle(String title);

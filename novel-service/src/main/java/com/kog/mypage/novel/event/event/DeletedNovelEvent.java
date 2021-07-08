@@ -6,4 +6,6 @@ import lombok.Getter;
 @Getter
 @AllArgsConstructor
 public class DeletedNovelEvent {
+    Long novelId;
+    Long userId;
 }

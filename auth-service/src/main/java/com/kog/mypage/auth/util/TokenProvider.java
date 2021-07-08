@@ -1,6 +1,6 @@
 package com.kog.mypage.auth.util;
 
-import com.kog.mypage.auth.config.AppProperties;
+import com.kog.mypage.auth.config.AppConfig;
 import com.kog.mypage.auth.entity.User;
 import com.kog.mypage.auth.security.UserPrincipal;
 import io.jsonwebtoken.Claims;
@@ -18,7 +18,7 @@ import java.util.stream.Collectors;
 @Component
 public class TokenProvider {
 
-    private final AppProperties appProperties;
+    private final AppConfig appConfig;
 
     public String createToken(Authentication authentication) {
         UserPrincipal userPrincipal = (UserPrincipal) authentication.getPrincipal();
@@ -33,7 +33,7 @@ public class TokenProvider {
                         .collect(Collectors.toList())
 
         );
-        claims.setExpiration(new Date(now.getTime() + appProperties.getAuth().getTokenValidSecond()));
+        claims.setExpiration(new Date(now.getTime() + appConfig.getAuth().getTokenValidSecond()));
 
 
         return getToken(claims);
@@ -45,7 +45,7 @@ public class TokenProvider {
         Claims claims = Jwts.claims().setSubject(Long.toString(user.getId())); //
         claims.put("email", user.getEmail());
         claims.put("roles", user.getRoleList());
-        claims.setExpiration(new Date(now.getTime() + appProperties.getAuth().getTokenValidSecond()));
+        claims.setExpiration(new Date(now.getTime() + appConfig.getAuth().getTokenValidSecond()));
 
         return getToken(claims);
     }
@@ -53,14 +53,14 @@ public class TokenProvider {
     private String getToken(Claims claims){
         return Jwts.builder()
                 .setClaims(claims)
-                .signWith(SignatureAlgorithm.HS512, appProperties.getAuth().getSecretKey())
+                .signWith(SignatureAlgorithm.HS512, appConfig.getAuth().getSecretKey())
                 .compact();
     }
 
     public Long getUserId(String token){
         Claims claims =
                 Jwts.parser()
-                .setSigningKey(appProperties.getAuth().getSecretKey())
+                .setSigningKey(appConfig.getAuth().getSecretKey())
                 .parseClaimsJws(token)
                         .getBody();
 

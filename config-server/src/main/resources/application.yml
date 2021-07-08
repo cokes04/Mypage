@@ -1,6 +1,43 @@
+server :
+  port : 9200
+
+eureka :
+  client :
+    register-with-eureka: true
+    fetch-registry: true
+    service-url :
+      default-zone : http://localhost:8761/eureka/
+
+  instance:
+    prefer-ip-address: false
+    lease-renewal-interval-in-seconds: 10
+    lease-expiration-duration-in-seconds: 5
+
 spring :
+  application :
+    name : config-server
+
+  rabbitmq:
+    host: localhost
+    port: 5672
+    username: guest
+    password: guest
+
   cloud :
     config :
       server :
-        git :
-          uri :
+        git:
+          uri: https://github.com/cokes04/mypage-config-repository.git
+          default-label : main
+          username : cokes04
+          password : '{cipher}5427498983692af9ab77931cbd3d035f5c59b0fdc117cdc1b655d69297cdd731'
+          search-paths : service-registry, api-gateway, auth-service, novel-service, ticket-service
+        encrypt:
+          enabled: false
+
+management:
+  endpoints:
+    web:
+      base-path: /actuator
+      exposure :
+        include : "*"

@@ -1,0 +1,23 @@
+POST	/auth/sign
+POST	/auth/login
+
+GET 	/novel/serch/{word}	?page&size&standard
+GET 	/novel/{novelId}
+POST 	/novel
+PUT 	/novel
+PATCH	/novel/hidden
+DELETE 	/novel/{novelId}
+
+GET	/episode/information	?novel&page&size&standard
+GET 	/episode/{episodeId}/information
+GET 	/episode/{episodeId}/content
+POST 	/episode
+PUT 	/episode
+DELETE 	/episode/{episodeId}
+
+GET 	/ticket			?novel
+PATCH	/ticket/use
+PATCH	/ticket/add
+
+GET 	/ticket-record/add	?novel
+GET	/ticket-record/use	?novel

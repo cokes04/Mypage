@@ -1,6 +1,7 @@
 package com.kog.mypage.ticket.entity;
 
-import com.kog.mypage.ticket.entity.enumerate.TicketType;
+import com.kog.mypage.ticket.enumeration.TicketType;
+
 import lombok.*;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;

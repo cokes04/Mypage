@@ -2,24 +2,24 @@ package com.kog.mypage.novel.service;
 
 import com.kog.mypage.novel.dto.CreateEpisodeDto;
 import com.kog.mypage.novel.dto.UpdateEpisodeDto;
-import com.kog.mypage.novel.dto.UserInfoDto;
 import com.kog.mypage.novel.entity.Episode;
 import com.kog.mypage.novel.entity.Novel;
 import com.kog.mypage.novel.event.event.CreatedEpisodeEvent;
 import com.kog.mypage.novel.event.event.DeletedEpisodeEvent;
 import com.kog.mypage.novel.event.event.UpdatedEpisodeEvent;
-import com.kog.mypage.novel.exception.InaccessibleEntityException;
-import com.kog.mypage.novel.exception.NotFoundEntityException;
+import com.kog.mypage.novel.exception.NoPermissionException;
+import com.kog.mypage.novel.exception.NonExistentEntityException;
+import com.kog.mypage.novel.feign.TicketClient;
 import com.kog.mypage.novel.repository.EpisodeRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
-import java.util.Optional;
-import java.util.function.Consumer;
+
 
 @RequiredArgsConstructor
 @Service
@@ -28,21 +28,24 @@ public class EpisodeServiceImpl implements EpisodeService{
     private final EpisodeRepository episodeRepository;
     private final NovelService novelService;
     private final ApplicationEventPublisher publisher;
+    private final TicketClient ticketClient;
 
     @Override
-    public Episode getEpisode(Long episodeId, UserInfoDto userInfoDto) {
+    public Episode getEpisode(Long episodeId) {
         Episode episode = episodeRepository.findById(episodeId)
-                .orElseThrow( () -> new NotFoundEntityException() );
-
-        if(episode.getNovel().isHidden() || episode.isHidden())
-            checkAccessRights(episode, userInfoDto);
+                .orElseThrow( () -> new NonExistentEntityException() );
 
         return episode;
     }
 
     @Override
-    public Page<Episode> getEpisodeOfNovel(Long novelId, Pageable pageable) {
+    public Page<Episode> getEpisodeOfNovelIncludeHidden(Long novelId, Pageable pageable) {
         return episodeRepository.findByNovel_Id(novelId, pageable);
+    }
+
+    @Override
+    public Page<Episode> getEpisodeOfNovelExcludeHidden(Long novelId, Pageable pageable) {
+        return episodeRepository.findByNovel_IdAndOpenDateIsNotNull(novelId, pageable);
     }
 
     @Override
@@ -51,13 +54,19 @@ public class EpisodeServiceImpl implements EpisodeService{
     }
 
     @Override
-    public Episode createEpisode(CreateEpisodeDto dto, UserInfoDto userInfoDto) {
-        Novel novel = novelService.getNovel(dto.getNovelId(), userInfoDto);
+    public Episode createEpisode(CreateEpisodeDto dto, Long userId) {
+        Novel novel = novelService.getNovel(dto.getNovelId());
+
+        if (!novel.isOwner(userId))
+            throw new NoPermissionException();
+
+        int lastOrderValue = episodeRepository.countByNovel_Id(novel.getId());
 
         Episode episode = Episode.builder()
                 .novel(novel)
                 .title(dto.getTitle())
                 .description(dto.getDescription())
+                .orderValue(lastOrderValue + 1)
                 .content(dto.getContent())
                 .openDate(dto.isHidden() ? null : LocalDateTime.now())
                 .build();
@@ -68,18 +77,13 @@ public class EpisodeServiceImpl implements EpisodeService{
     }
 
     @Override
-    public Episode updateEpisode(UpdateEpisodeDto dto, UserInfoDto userInfoDto) {
-        Episode beforeEpisode = episodeRepository.findById(dto.getEpisodeId())
-                .orElseThrow( () -> new NotFoundEntityException() );
-
-        checkAccessRights(beforeEpisode, userInfoDto);
-
+    public Episode updateEpisode(Episode beforeEpisode, UpdateEpisodeDto dto) {
         Episode afterEpisode = Episode.builder()
                 .id(beforeEpisode.getId())
                 .novel(beforeEpisode.getNovel())
-                .round(beforeEpisode.getRound())
+                .orderValue(beforeEpisode.getOrderValue())
                 .openDate(beforeEpisode.getOpenDate())
-                .createDate(beforeEpisode.getCreateDate())
+                .createdDate(beforeEpisode.getCreatedDate())
 
                 .title(dto.getTitle()
                         .orElse(beforeEpisode.getTitle()))
@@ -98,22 +102,14 @@ public class EpisodeServiceImpl implements EpisodeService{
     }
 
     @Override
-    public void deleteEpisode(Long episodeId, UserInfoDto userInfoDto) {
-        Episode episode = episodeRepository.findById(episodeId)
-                .orElseThrow( () -> new NotFoundEntityException() );
-
-        checkAccessRights(episode, userInfoDto);
-
+    public void deleteEpisode(Episode episode) {
         episodeRepository.delete(episode);
         publisher.publishEvent(new DeletedEpisodeEvent());
     }
 
     @Override
-    public void deleteEpisodeOfNovel(Long novelId, UserInfoDto userInfoDto) {
-        Novel novel = novelService.getNovel(novelId, userInfoDto);
-
-        episodeRepository.deleteByNovel(novel);
-
+    public void deleteEpisodeOfNovel(Long novelId) {
+        episodeRepository.deleteByNovel_Id(novelId);
         publisher.publishEvent(new DeletedEpisodeEvent());
     }
 
@@ -123,25 +119,13 @@ public class EpisodeServiceImpl implements EpisodeService{
     }
 
     @Override
-    public Episode changeHidden(Long episodeId, UserInfoDto userInfoDto, boolean hidden){
-        Episode episode = episodeRepository.findById(episodeId)
-                .orElseThrow( () -> new NotFoundEntityException() );
-
-        checkAccessRights(episode, userInfoDto);
-
+    public Episode changeHidden(Episode episode, boolean hidden){
         episode.changeHidden(hidden);
-
         return episodeRepository.save(episode);
     }
 
-    private void checkAccessRights(Episode episode, UserInfoDto userInfoDto){
-        // admin이거나 해당 novel을 가진 user일때만
-        if(userInfoDto.getRoles().contains("ADMIN"))
-            return;
-
-        if (episode.getNovel().getUserId() == userInfoDto.getUserId())
-            return;
-
-        throw new InaccessibleEntityException();
+    @Override
+    public boolean isPurchase(Episode episode, Long userId) {
+        return false;
     }
 }

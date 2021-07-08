@@ -1,8 +1,8 @@
 package com.kog.mypage.novel.dto;
 
-import com.kog.mypage.novel.enumerate.AgeGrade;
-import com.kog.mypage.novel.enumerate.Genre;
-import com.kog.mypage.novel.enumerate.SerialCycle;
+import com.kog.mypage.novel.enumeration.AgeGrade;
+import com.kog.mypage.novel.enumeration.Genre;
+import com.kog.mypage.novel.enumeration.SerialCycle;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.ToString;
@@ -15,6 +15,7 @@ import java.util.Optional;
 @ToString
 public class UpdateNovelDto {
 
+    private Long userId;
 
     private Long novelId;
 
@@ -31,8 +32,9 @@ public class UpdateNovelDto {
     private Optional<Boolean> hidden;
 
     @Builder
-    public UpdateNovelDto(Long novelId, Optional<String> title, Optional<String> description, Optional<AgeGrade> ageGrade,
+    public UpdateNovelDto(Long userId, Long novelId, Optional<String> title, Optional<String> description, Optional<AgeGrade> ageGrade,
                           Optional<List<Genre>> genre, Optional<List<SerialCycle>> serialCycle, Optional<Boolean> hidden) {
+        this.userId = userId;
         this.novelId = novelId;
         this.title = title;
         this.description = description;

@@ -10,7 +10,7 @@ import org.springframework.stereotype.Component;
 @Aspect
 public class LogAspect {
 
-    @Around("within(com.kog.mypage.novel..*) or within(com.kog.mypage.novel.securituy..*)")
+    @Around("within(com.kog.mypage.novel..*)")
     public Object a(ProceedingJoinPoint joinPoint) throws Throwable{
         System.out.println("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@");
         System.out.println(joinPoint.getTarget());

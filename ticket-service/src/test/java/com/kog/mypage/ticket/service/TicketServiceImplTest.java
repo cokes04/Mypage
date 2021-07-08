@@ -3,23 +3,14 @@ package com.kog.mypage.ticket.service;
 import com.kog.mypage.ticket.dto.AddTicketDto;
 import com.kog.mypage.ticket.dto.UseTicketDto;
 import com.kog.mypage.ticket.dto.UserInfoDto;
-import com.kog.mypage.ticket.entity.enumerate.TicketType;
-import com.kog.mypage.ticket.entity.Ticket;
+import com.kog.mypage.ticket.enumeration.TicketType;
 
 
-import com.kog.mypage.ticket.exception.LackTicketException;
 import com.kog.mypage.ticket.repository.TicketRepository;
 
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
-import org.mockito.AdditionalAnswers;
-import org.mockito.Mockito;
 import java.util.*;
 
-import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.*;
-import static org.mockito.Mockito.when;
 
 class TicketServiceImplTest {
 
@@ -48,7 +39,7 @@ class TicketServiceImplTest {
     private final UseTicketDto useRentalEp2TicketDto = UseTicketDto.builder()
             .novelId(novelId).episodeId(ep2Id).ticketType(TicketType.RENTAL).build();
 
-    @BeforeEach
+    /*@BeforeEach
     void setupEach() {
         ticketRepository = Mockito.mock(TicketRepository.class);
         ticketRecordService = Mockito.mock(TicketRecordService.class);
@@ -191,5 +182,5 @@ class TicketServiceImplTest {
         assertEquals(expectedNovelId, actualTicket.getNovelId());
         assertEquals(expectedPossessionCount, actualTicket.getPossessionCount());
         assertEquals(expectedRentalCount, actualTicket.getRentalCount());
-    }
+    }*/
 }

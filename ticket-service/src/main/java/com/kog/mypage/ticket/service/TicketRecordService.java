@@ -2,22 +2,21 @@ package com.kog.mypage.ticket.service;
 
 import com.kog.mypage.ticket.dto.AddTicketDto;
 import com.kog.mypage.ticket.dto.UseTicketDto;
-import com.kog.mypage.ticket.dto.UserInfoDto;
 import com.kog.mypage.ticket.entity.AddTicketRecord;
 import com.kog.mypage.ticket.entity.UseTicketRecord;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
-import java.util.Optional;
 
 public interface TicketRecordService {
 
-    AddTicketRecord createAddTicketRecord(AddTicketDto addTicketDto, UserInfoDto userInfoDto);
+    AddTicketRecord createAddTicketRecord(AddTicketDto addTicketDto);
 
-    UseTicketRecord createUseTicketRecord(UseTicketDto useTicketDto, UserInfoDto userInfoDto);
+    UseTicketRecord createUseTicketRecord(UseTicketDto useTicketDto);
 
-    Page<AddTicketRecord> getAddTicketRecordByNovelId(Optional<Long> optionalNovelId, int pageNum, UserInfoDto userInfoDto);
+    Page<AddTicketRecord> getAddTicketRecordByNovelId(Long novelId, Long userId, Pageable pageable);
 
-    Page<UseTicketRecord> getUseTicketRecordByNovelId(Optional<Long> optionalNovelId, int pageNum, UserInfoDto userInfoDto);
+    Page<UseTicketRecord> getUseTicketRecordByNovelId(Long novelId, Long userId, Pageable pageable);
 
-    boolean isPurchasedEpisode(Long episodeId, UserInfoDto userInfoDto);
+    boolean isPurchasedEpisode(Long episodeId, Long userId);
 }

@@ -2,6 +2,7 @@ package com.kog.mypage.novel.entity;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
@@ -10,6 +11,7 @@ import java.time.LocalDateTime;
 
 @NoArgsConstructor
 @Getter
+@ToString
 @Entity
 @EntityListeners(AuditingEntityListener.class)
 public class Publisher {
@@ -23,5 +25,5 @@ public class Publisher {
     private String address;
 
     @CreatedDate
-    private LocalDateTime createDate;
+    private LocalDateTime createdDate;
 }

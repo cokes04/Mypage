@@ -14,19 +14,19 @@ import java.util.stream.Collectors;
 @Getter
 public class NovelSearchResponse extends ApiResponse {
 
-    private List<NovelResponse> novels;
+    private List<NovelResponse> novelList;
 
     @Builder
-    private NovelSearchResponse(boolean success, String message, List<NovelResponse> novels) {
+    private NovelSearchResponse(boolean success, String message, List<NovelResponse> novelList) {
         super(success, message);
-        this.novels = novels;
+        this.novelList = novelList;
     }
 
     public static NovelSearchResponse of(boolean success, String message, Page<Novel> novels){
         return NovelSearchResponse.builder()
                 .success(success)
                 .message(message)
-                .novels(novels.map(NovelResponse::of).toList())
+                .novelList(novels.map(NovelResponse::of).toList())
         .build();
     }
 

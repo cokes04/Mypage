@@ -11,8 +11,6 @@ import java.time.LocalDateTime;
 @Getter
 public class TicketResponse extends ApiResponse {
 
-    private Long tiketId;
-
     private Long userId;
 
     private Long novelId;
@@ -22,31 +20,29 @@ public class TicketResponse extends ApiResponse {
     private int rentCount;
 
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "Asia/Seoul")
-    private LocalDateTime createDate;
+    private LocalDateTime createdDate;
 
 
     @Builder
-    private TicketResponse(boolean success, String message, Long tiketId, Long userId, Long novelId,
-                           int possessionCount, int rentCount, LocalDateTime createDate) {
+    private TicketResponse(boolean success, String message, Long userId, Long novelId,
+                           int possessionCount, int rentCount, LocalDateTime createdDate) {
         super(success, message);
-        this.tiketId = tiketId;
         this.userId = userId;
         this.novelId = novelId;
         this.possessionCount = possessionCount;
         this.rentCount = rentCount;
-        this.createDate = createDate;
+        this.createdDate = createdDate;
     }
 
     public static TicketResponse of(boolean success, String message, Ticket ticket){
         return TicketResponse.builder()
                 .success(success)
                 .message(message)
-                .tiketId(ticket.getId())
                 .userId(ticket.getUserId())
                 .novelId(ticket.getNovelId())
                 .possessionCount(ticket.getPossessionCount())
                 .rentCount(ticket.getRentalCount())
-                .createDate(ticket.getCreateDate())
+                .createdDate(ticket.getCreatedDate())
                 .build();
     }
 }

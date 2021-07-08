@@ -1,19 +1,19 @@
 package com.kog.mypage.gateway.filter;
-import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.kog.mypage.gateway.util.UserInfo;
 import com.kog.mypage.gateway.util.TokenProvider;
-import io.jsonwebtoken.lang.Collections;
+import io.jsonwebtoken.ExpiredJwtException;
+import io.jsonwebtoken.SignatureException;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import org.apache.http.entity.ContentType;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.cloud.context.config.annotation.RefreshScope;
 import org.springframework.cloud.gateway.filter.GatewayFilter;
 import org.springframework.cloud.gateway.filter.GatewayFilterChain;
 import org.springframework.cloud.gateway.filter.factory.*;
 import org.springframework.cloud.gateway.filter.factory.rewrite.ModifyRequestBodyGatewayFilterFactory;
 import org.springframework.cloud.gateway.support.ServerWebExchangeUtils;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.server.reactive.ServerHttpRequest;
@@ -29,6 +29,7 @@ import java.util.*;
 
 
 @Component
+@RefreshScope
 public class TokenAuthenticationFilter extends AbstractGatewayFilterFactory<TokenAuthenticationFilter.Config> {
 
     @Value("${app.auth.tokenHeaderName}")
@@ -44,48 +45,64 @@ public class TokenAuthenticationFilter extends AbstractGatewayFilterFactory<Toke
     @Getter
     @AllArgsConstructor
     public static class Config {
-        private String role;
+        private List<String> role;
     }
 
     @Override
     public GatewayFilter apply(Config config) {
         return (exchange, chain) -> {
             String token;
+
             try {
                 token = tokenProvider.getToken(exchange.getRequest());
             } catch (NullPointerException e) {
                 return failureAuthorized(exchange);
             }
+
+            if (!tokenProvider.validateToken(token))
+                return failureAuthorized(exchange);
+
             UserInfo userInfo = tokenProvider.getInfo(token);
 
-            if (userInfo.isExpired() || !userInfo.getRoles().contains(config.getRole()))
+            if (userInfo.isExpired() || !isExistsPermission(config.getRole(), userInfo.getRoles()))
                 return failureAuthorized(exchange);
 
             ServerHttpRequest request = exchange.getRequest();
             HttpMethod method = request.getMethod();
 
-            removeDataToHeader(exchange, chain, tokenHeaderName);
+            removeHeader(exchange, chain, tokenHeaderName);
 
             if (method == HttpMethod.GET || method == HttpMethod.DELETE)
-                return addDataToParameter(exchange, chain, userInfo);
-            else if(method == HttpMethod.POST || method == HttpMethod.PUT)
-                return addDataToBody(exchange, chain, "userInfo", userInfo);
+                return addParameter(exchange, chain, userInfo);
+            else if(method == HttpMethod.POST || method == HttpMethod.PUT || method == HttpMethod.PATCH)
+                return addBody(exchange, chain, "userInfo", userInfo);
 
             return chain.filter(exchange);
         };
     }
 
-    private Mono<Void> removeDataToHeader(ServerWebExchange exchange, GatewayFilterChain chain, String headerName){
+    private Mono<Void> removeHeader(ServerWebExchange exchange, GatewayFilterChain chain, String key){
         RemoveRequestHeaderGatewayFilterFactory filterFactory =
                 new RemoveRequestHeaderGatewayFilterFactory();
-        NameConfig config = new  NameConfig();
-        config.setName(headerName);
+        NameConfig config = new NameConfig();
+        config.setName(key);
 
         return filterFactory.apply(config).filter(exchange, chain);
     }
 
+    private Mono<Void> addHeader(ServerWebExchange exchange, GatewayFilterChain chain, String key, String data){
+        AddRequestHeaderGatewayFilterFactory filterFactory =
+                new AddRequestHeaderGatewayFilterFactory();
+        AbstractNameValueGatewayFilterFactory.NameValueConfig config =
+                new AbstractNameValueGatewayFilterFactory.NameValueConfig();
+        config.setName(key);
+        config.setValue(data);
 
-    private Mono<Void> addDataToParameter(ServerWebExchange exchange, GatewayFilterChain chain, Object data){
+        return  filterFactory.apply(config).filter(exchange, chain);
+    }
+
+
+    private Mono<Void> addParameter(ServerWebExchange exchange, GatewayFilterChain chain, Object data){
         URI uri = exchange.getRequest().getURI();
         StringBuilder query = new StringBuilder();
         String originalQuery = uri.getRawQuery();
@@ -113,7 +130,6 @@ public class TokenAuthenticationFilter extends AbstractGatewayFilterFactory<Toke
             query.append('=');
             query.append(value);
         }
-        System.out.println(query.toString());
         try {
             URI newUri = UriComponentsBuilder.fromUri(uri).replaceQuery(query.toString()).build(true).toUri();
             ServerHttpRequest request = exchange.getRequest().mutate().uri(newUri).build();
@@ -123,7 +139,7 @@ public class TokenAuthenticationFilter extends AbstractGatewayFilterFactory<Toke
         }
     }
 
-    private Mono<Void> addDataToBody(ServerWebExchange exchange, GatewayFilterChain chain, String key, Object data){
+    private Mono<Void> addBody(ServerWebExchange exchange, GatewayFilterChain chain, String key, Object data){
         ModifyRequestBodyGatewayFilterFactory filterFactory =
                 new ModifyRequestBodyGatewayFilterFactory();
 
@@ -132,7 +148,9 @@ public class TokenAuthenticationFilter extends AbstractGatewayFilterFactory<Toke
                 .setContentType(ContentType.APPLICATION_JSON.getMimeType())
                 .setRewriteFunction(Map.class, Map.class,
                         (exchange1, RequestBody) -> {
-                            RequestBody.put(key,data);
+                            if (RequestBody == null)
+                                RequestBody = new HashMap();
+                            RequestBody.put(key, data);
                             return Mono.just(RequestBody);
                         });
 
@@ -150,6 +168,14 @@ public class TokenAuthenticationFilter extends AbstractGatewayFilterFactory<Toke
             return collection.toString().replaceAll("\\]|\\[|\\\\s","");
         else
             return null;
+    }
+
+    private boolean isExistsPermission(List<String> permissionList, List<String> userRoles){
+        for (String permission : permissionList){
+            if (userRoles.contains(permission))
+                return true;
+        }
+        return false;
     }
 }
 

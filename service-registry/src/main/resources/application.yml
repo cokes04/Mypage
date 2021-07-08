@@ -1,11 +1,14 @@
-server :
-  port : 8761
-
-eureka :
-  client :
-    register-with-eureka : false
-    fetch-registry : false
-
 spring:
   application:
     name : service-registry
+
+  profiles :
+    active : dev
+
+  config:
+    import: optional:configserver:http://localhost:9200
+
+  cloud :
+    config:
+      discovery:
+        enabled : false

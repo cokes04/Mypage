@@ -1,6 +1,6 @@
 package com.kog.mypage.ticket.entity;
 
-import com.kog.mypage.ticket.entity.enumerate.TicketType;
+import com.kog.mypage.ticket.enumeration.TicketType;
 import com.kog.mypage.ticket.exception.LackTicketException;
 import lombok.*;
 import org.springframework.data.annotation.CreatedDate;
@@ -29,16 +29,16 @@ public class Ticket {
     private int possessionCount;
 
     @CreatedDate
-    private LocalDateTime createDate;
+    private LocalDateTime createdDate;
 
     @Builder
-    public Ticket(Long id, Long userId, Long novelId, int rentalCount, int possessionCount, LocalDateTime createDate) {
+    public Ticket(Long id, Long userId, Long novelId, int rentalCount, int possessionCount, LocalDateTime createdDate) {
         this.id = id;
         this.userId = userId;
         this.novelId = novelId;
         this.rentalCount = rentalCount;
         this.possessionCount = possessionCount;
-        this.createDate = createDate;
+        this.createdDate = createdDate;
     }
 
     public int getAllCount(){

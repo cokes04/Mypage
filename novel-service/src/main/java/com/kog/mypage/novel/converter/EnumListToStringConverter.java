@@ -1,6 +1,6 @@
 package com.kog.mypage.novel.converter;
 
-import com.kog.mypage.novel.enumerate.Genre;
+import com.kog.mypage.novel.enumeration.Genre;
 
 import javax.persistence.AttributeConverter;
 import java.util.ArrayList;

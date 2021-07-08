@@ -12,17 +12,17 @@ import java.util.List;
 @Getter
 public class EpisodeInformationListResponse extends ApiResponse{
 
-   private List<EpisodeInformationResponse> episodeInformationResponses;
+   private List<EpisodeInformationResponse> episodeInformationList;
 
    private Long totalEpisodeCount;
 
    private int totalEpisodePage;
 
    @Builder
-   private EpisodeInformationListResponse(boolean success, String message, List<EpisodeInformationResponse> episodeInformationResponses,
+   private EpisodeInformationListResponse(boolean success, String message, List<EpisodeInformationResponse> episodeInformationList,
                                           Long totalEpisodeCount, int totalEpisodePage) {
         super(success, message);
-        this.episodeInformationResponses = episodeInformationResponses;
+        this.episodeInformationList = episodeInformationList;
         this.totalEpisodeCount = totalEpisodeCount;
         this.totalEpisodePage = totalEpisodePage;
     }
@@ -31,7 +31,7 @@ public class EpisodeInformationListResponse extends ApiResponse{
        return EpisodeInformationListResponse.builder()
                .success(success)
                .message(message)
-               .episodeInformationResponses(episodeResponses.map(EpisodeInformationResponse::new).toList())
+               .episodeInformationList(episodeResponses.map(EpisodeInformationResponse::of).toList())
                .totalEpisodeCount(episodeResponses.getTotalElements())
                .totalEpisodePage(episodeResponses.getTotalPages())
                .build();
@@ -42,7 +42,7 @@ public class EpisodeInformationListResponse extends ApiResponse{
 
         private Long episodeId;
 
-        private int round;
+        private int orderValue;
 
         private String title;
 
@@ -51,15 +51,27 @@ public class EpisodeInformationListResponse extends ApiResponse{
         private String hidden;
 
         @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "Asia/Seoul")
-        private LocalDateTime createDate;
+        private LocalDateTime createdDate;
 
-        public EpisodeInformationResponse(Episode episode) {
-            this.episodeId = episode.getId();
-            this.round = episode.getRound();
-            this.title = episode.getTitle();
-            this.description = episode.getDescription();
-            this.createDate = episode.getCreateDate();
-            this.hidden = episode.getOpenDate().equals(null) ? "Y" : "N";
+        @Builder
+        public EpisodeInformationResponse(Long episodeId, int orderValue, String title, String description, String hidden, LocalDateTime createdDate) {
+            this.episodeId = episodeId;
+            this.orderValue = orderValue;
+            this.title = title;
+            this.description = description;
+            this.hidden = hidden;
+            this.createdDate = createdDate;
+        }
+
+        public static EpisodeInformationResponse of(Episode episode){
+            return EpisodeInformationResponse.builder()
+                    .episodeId(episode.getId())
+                    .orderValue(episode.getOrderValue())
+                    .title(episode.getTitle())
+                    .description(episode.getDescription())
+                    .createdDate(episode.getCreatedDate())
+                    .hidden(episode.getOpenDate().equals(null) ? "Y" : "N")
+                    .build();
         }
     }
 }

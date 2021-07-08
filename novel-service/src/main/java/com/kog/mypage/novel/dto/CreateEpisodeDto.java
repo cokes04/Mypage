@@ -6,7 +6,6 @@ import lombok.Getter;
 @Getter
 public class CreateEpisodeDto {
 
-
     private Long novelId;
 
     private String title;

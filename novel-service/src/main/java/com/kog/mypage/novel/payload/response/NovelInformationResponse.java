@@ -18,8 +18,6 @@ public class NovelInformationResponse extends ApiResponse{
 
     private String description;
 
-    private int freeEpisodeCount;
-
     private int pricePerEpisode;
 
     private int ageGrade;
@@ -40,13 +38,12 @@ public class NovelInformationResponse extends ApiResponse{
 
     @Builder
     private NovelInformationResponse(boolean success, String message, Long id, String title, String description,
-                             int freeEpisodeCount, int pricePerEpisode, int ageGrade, List<String> genre, List<String> serialCycle,
-                             LocalDateTime createdDate, LocalDateTime openDate, LocalDateTime lastReleaseDate) {
+                                     int pricePerEpisode, int ageGrade, List<String> genre, List<String> serialCycle,
+                                     LocalDateTime createdDate, LocalDateTime openDate, LocalDateTime lastReleaseDate) {
         super(success, message);
         this.id = id;
         this.title = title;
         this.description = description;
-        this.freeEpisodeCount = freeEpisodeCount;
         this.pricePerEpisode = pricePerEpisode;
         this.ageGrade = ageGrade;
         this.genre = genre;
@@ -63,7 +60,6 @@ public class NovelInformationResponse extends ApiResponse{
                 .id(novel.getId())
                 .title(novel.getTitle())
                 .description(novel.getDescription())
-                .freeEpisodeCount(novel.getFreeEpisodeCount())
                 .pricePerEpisode(novel.getPricePerEpisode())
                 .ageGrade(novel.getAgeGrade().getValue())
                 .genre(novel.getGenre().stream().map(i -> i.getValue()).collect(Collectors.toList()))

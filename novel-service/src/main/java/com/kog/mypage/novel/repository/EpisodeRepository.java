@@ -16,7 +16,9 @@ public interface EpisodeRepository extends JpaRepository<Episode, Long> {
 
     List<Episode> findByNovel(Novel novel);
 
-    void deleteByNovel(Novel novel);
+    void deleteByNovel_Id(Long novelId);
 
     boolean existsByNovel_Id(Long novelId);
+
+    int countByNovel_Id(Long novelId);
 }

@@ -1,6 +1,6 @@
 package com.kog.mypage.novel.converter;
 
-import com.kog.mypage.novel.enumerate.SerialCycle;
+import com.kog.mypage.novel.enumeration.SerialCycle;
 import org.springframework.stereotype.Component;
 
 import javax.persistence.AttributeConverter;

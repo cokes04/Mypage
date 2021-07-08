@@ -12,4 +12,11 @@ public class EpisodeServiceEventListener {
 
     private final EpisodeService episodeService;
 
+    @EventListener
+    public void handleEvent(DeletedNovelEvent event){
+        Long novelId = event.getNovelId();
+        Long userId = event.getUserId();
+        episodeService.deleteEpisodeOfNovel(novelId);
+    }
+
 }

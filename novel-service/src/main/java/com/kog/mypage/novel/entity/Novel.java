@@ -3,9 +3,9 @@ package com.kog.mypage.novel.entity;
 import com.kog.mypage.novel.converter.BooleanToYNConverter;
 import com.kog.mypage.novel.converter.GenreListToStringConverter;
 import com.kog.mypage.novel.converter.SerialCycleListToStringConverter;
-import com.kog.mypage.novel.enumerate.AgeGrade;
-import com.kog.mypage.novel.enumerate.Genre;
-import com.kog.mypage.novel.enumerate.SerialCycle;
+import com.kog.mypage.novel.enumeration.AgeGrade;
+import com.kog.mypage.novel.enumeration.Genre;
+import com.kog.mypage.novel.enumeration.SerialCycle;
 import lombok.*;
 import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
@@ -52,9 +52,6 @@ public class Novel {
     @Column(name = "price", columnDefinition = "integer default 100", nullable = false)
     private int pricePerEpisode;         // 회차당 가격
 
-    @Column(columnDefinition = "integer default 0", nullable = false)
-    private int freeEpisodeCount;               // 첫편부터 무료 회차 수
-
     @Column(nullable =  false)
     @Enumerated(EnumType.STRING)
     private AgeGrade ageGrade;                 //연령 등급
@@ -68,15 +65,17 @@ public class Novel {
     private List<SerialCycle> serialCycle;      // 연재 주기
 
     @CreatedDate
+    @Column(nullable =  false)
     private LocalDateTime createdDate;          // 생성 일자
 
+    @Column(nullable =  true)
     private LocalDateTime openDate;             // 공개 일자
 
     private LocalDateTime lastReleaseDate;      // 최근 연재 일자
 
     @Builder
     public Novel(Long id, Long userId, Publisher publisher, String title, String description, List<Episode> episodes,
-                 boolean exclusive, int pricePerEpisode, int freeEpisodeCount, AgeGrade ageGrade, List<Genre> genre, List<SerialCycle> serialCycle,
+                 boolean exclusive, int pricePerEpisode, AgeGrade ageGrade, List<Genre> genre, List<SerialCycle> serialCycle,
                  LocalDateTime createdDate, LocalDateTime openDate, LocalDateTime lastReleaseDate) {
         this.id = id;
         this.userId = userId;
@@ -86,7 +85,6 @@ public class Novel {
         this.episodes = episodes;
         this.exclusive = exclusive;
         this.pricePerEpisode = pricePerEpisode;
-        this.freeEpisodeCount = freeEpisodeCount;
         this.ageGrade = ageGrade;
         this.genre = genre;
         this.serialCycle = serialCycle;
@@ -94,9 +92,12 @@ public class Novel {
         this.openDate = openDate;
         this.lastReleaseDate = lastReleaseDate;
     }
+    public boolean isOwner(Long userId){
+        return this.getUserId() == userId ? true : false;
+    }
 
-    public void changeHidden(boolean isHidden){
-        if (isHidden)
+    public void changeHidden(boolean hidden){
+        if (hidden)
             close();
         else
             open();

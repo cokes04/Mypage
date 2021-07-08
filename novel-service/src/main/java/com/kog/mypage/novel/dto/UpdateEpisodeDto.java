@@ -26,6 +26,7 @@ public class UpdateEpisodeDto {
 
     @Builder
     public UpdateEpisodeDto(Long episodeId, Optional<String> title, Optional<String> description, Optional<String> content, Optional<Boolean> hidden) {
+
         this.episodeId = episodeId;
         this.title = title;
         this.description = description;

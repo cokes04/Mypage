@@ -1,23 +1,18 @@
 server :
   port : 8100
 
-eureka :
-  client :
-    service-url :
-      default-zone : http://localhost:8761/eureka/
-
-gateway :
-  name : api-gateway
-
 spring :
   application :
     name : novel-service
 
   profiles :
-    include :
-      - database
-      - app
+    active : dev
 
-logging :
-  level :
-    root : #debug
+  config:
+    import: optional:configserver:http://localhost:9200
+
+    discsovery:
+      enabled : false
+
+service :
+  api-gateway : api-gateway

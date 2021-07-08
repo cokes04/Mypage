@@ -13,5 +13,5 @@ public class EpisodePageRequest {
 
     private int size;
 
-    private String strandard;
+    private String standard;
 }

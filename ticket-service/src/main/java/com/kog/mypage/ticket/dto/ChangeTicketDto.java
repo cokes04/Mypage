@@ -1,7 +1,6 @@
 package com.kog.mypage.ticket.dto;
 
-import com.kog.mypage.ticket.entity.enumerate.TicketType;
-import com.kog.mypage.ticket.entity.TicketRecord;
+import com.kog.mypage.ticket.enumeration.TicketType;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -10,6 +9,8 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Getter
 public abstract class ChangeTicketDto {
+
+    private Long userId;
 
     private Long novelId;
 

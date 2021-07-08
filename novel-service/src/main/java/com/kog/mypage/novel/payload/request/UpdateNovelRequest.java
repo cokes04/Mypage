@@ -1,9 +1,9 @@
 package com.kog.mypage.novel.payload.request;
 
-import com.kog.mypage.novel.enumerate.AgeGrade;
+import com.kog.mypage.novel.enumeration.AgeGrade;
 
-import com.kog.mypage.novel.enumerate.Genre;
-import com.kog.mypage.novel.enumerate.SerialCycle;
+import com.kog.mypage.novel.enumeration.Genre;
+import com.kog.mypage.novel.enumeration.SerialCycle;
 import lombok.Getter;
 
 import javax.validation.constraints.Max;
@@ -55,14 +55,20 @@ public class UpdateNovelRequest {
     }
 
     public Optional<AgeGrade> getAgeGrade(){
+        if (ageGrade == 0)
+            return Optional.empty();
         return Optional.ofNullable(AgeGrade.toEnum(this.ageGrade));
     }
 
     public Optional<List<Genre>> getGenre(){
+        if (genre == null || genre.isEmpty())
+            return Optional.empty();
         return Optional.ofNullable(convert(genre, i -> Genre.toEnum(i.toLowerCase())));
     }
 
     public Optional<List<SerialCycle>> getSerialCycle(){
+        if (serialCycle == null || serialCycle.isEmpty())
+            return Optional.empty();
         return Optional.ofNullable(convert(serialCycle, i -> SerialCycle.toEnum(i)));
     }
 

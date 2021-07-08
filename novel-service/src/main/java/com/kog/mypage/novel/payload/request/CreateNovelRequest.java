@@ -1,8 +1,8 @@
 package com.kog.mypage.novel.payload.request;
 
-import com.kog.mypage.novel.enumerate.AgeGrade;
-import com.kog.mypage.novel.enumerate.Genre;
-import com.kog.mypage.novel.enumerate.SerialCycle;
+import com.kog.mypage.novel.enumeration.AgeGrade;
+import com.kog.mypage.novel.enumeration.Genre;
+import com.kog.mypage.novel.enumeration.SerialCycle;
 import lombok.Getter;
 import lombok.ToString;
 

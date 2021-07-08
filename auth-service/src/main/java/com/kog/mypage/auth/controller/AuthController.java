@@ -8,6 +8,8 @@ import com.kog.mypage.auth.payload.response.ApiResponse;
 import com.kog.mypage.auth.payload.response.AuthResponse;
 import com.kog.mypage.auth.service.UserService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.cloud.context.config.annotation.RefreshScope;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -18,11 +20,13 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import javax.ws.rs.GET;
 import java.util.Optional;
 
 @RequiredArgsConstructor
 @RestController
 @RequestMapping("/auth")
+@RefreshScope
 public class AuthController {
 
     private final UserService userService;
@@ -32,6 +36,16 @@ public class AuthController {
     private final AuthenticationManager authenticationManager;
 
     private final PasswordEncoder passwordEncoder;
+
+    @Value("${aaa}")
+    private String aaa;
+
+    @GetMapping("/aaa")
+    public String aaaaaaaa(){
+        System.out.println("@@@@@@@@@@@@@@@@@@@@@@@");
+        System.out.println(aaa );
+        return aaa;
+    }
 
     @PostMapping("/login")
     public ResponseEntity<?> authenticateUser(@Validated @RequestBody LoginRequest loginRequest) {

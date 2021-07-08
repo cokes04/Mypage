@@ -6,10 +6,8 @@ import lombok.NoArgsConstructor;
 
 @Getter
 public class ExceptionResponse extends ApiResponse{
-    private int code;
 
-    public ExceptionResponse(boolean success, String message, int code) {
+    public ExceptionResponse(boolean success, String message) {
         super(success, message);
-        this.code = code;
     }
 }

@@ -19,7 +19,7 @@ public class UserController {
     private final UserService userService;
     private final TokenProvider tokenProvider;
 
-    @PostMapping
+    //@PostMapping
     public ResponseEntity<?> getProfile(@RequestHeader(name="Authorization") String token){
         Long userId = tokenProvider.getUserId(token);
         Optional<User> optionalUser = userService.getUserById(userId);
